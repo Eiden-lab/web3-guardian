@@ -53,6 +53,34 @@ Guard on Sepolia: [`0xa850c0653F3623D8b7c7032139fBD1577445B981`](https://sepolia
 
 Interactive walkthrough of the proof: [`demo/index.html`](demo/index.html).
 
+### The Binance hack, replayed (30 October 2026)
+
+On 29 October 2026 an attacker who controlled Binance's withdrawal service drained about **$6.3B** from its hot
+wallets. One wallet lost 1.615B USDT in **3 minutes 24 seconds**. Those funds were not in a Safe, so Web3 Guardian could
+not have protected them. The replay asks: what if the same funds had sat in a Safe with Web3 Guardian, against an
+attacker with the same power (valid owner signatures on anything)?
+
+| | Real hack | With Web3 Guardian |
+|---|---|---|
+| Sweep everything in one transaction | 100% gone in 3 min 24 s | Refused for 48 h. At 56 min, when Tether froze the stolen USDT, the vault still held 100% |
+| The team reacts within hours | Too late | Sweep cancelled: nothing lost |
+| Sweep split into slices, team reacts after the first | — | Only the first small slice (5%) leaves |
+| Automated executor pulls 823M USDC | All of it | Full pull refused; a small daily amount at most |
+
+Replayed on Sepolia with the same 1,615,000,000 tokens (testnet delays are minutes):
+
+| Step | Result | Transaction |
+|---|---|---|
+| Full sweep, at once | Refused | [0xff3c…b724](https://sepolia.etherscan.io/tx/0xff3c3a2542e427d1e3ca2d89aa2e1837ba598b91b4819badc6dfa2c513ddb724) |
+| Independent sentinel adds time | Delayed | [0x23ef…b772](https://sepolia.etherscan.io/tx/0x23ef71ec3502f60dfdb1ea88269c4512af26bab398eb7ccccd0cc63d1bddb772) |
+| Full sweep, after the owners cancelled | Refused for good | [0x20ff…1730](https://sepolia.etherscan.io/tx/0x20ffa3468a99c1167a029a1fd103dc740eaae61aecc60e4ba825e09d1f311730) |
+| First 5% slice, before anyone reacted | Executed | [0xb5c2…ba59](https://sepolia.etherscan.io/tx/0xb5c29e33b784ff0a62ccf91f75fb5bd491b3762176cdef6a9c4bb79206e9ba59) |
+| Remaining 25% and 70% slices, cancelled | Refused | [0x7a1e…ea70](https://sepolia.etherscan.io/tx/0x7a1e909cdde02052eb4396469e442eb6cab1df06edda73d69ea4d2baf91dea70), [0x160e…b8f](https://sepolia.etherscan.io/tx/0x160e8f28dd42ca10ee4322655da1acdd59300e9e7cc124022d2437ce66fc6b8f) |
+
+**The Safe kept 95%.** In the real hack, 100% was gone in minutes. Web3 Guardian buys the time; people still have to
+cancel. Next on the roadmap because of this hack: approved destinations and fixed caps, so even the first slice cannot
+reach an unknown address.
+
 ### Real attacks replayed
 
 The real [Bybit](https://etherscan.io/tx/0x46deef0f52e3a983b67abf4714448a41dd7ffd6d32d32da69d62081c68ad7882) and
@@ -78,6 +106,8 @@ protects honest signers who are deceived.
 - [x] Guard prototype, real-attack replays, theft scenarios
 - [x] Alerting node (watches, simulates, explains each transaction)
 - [x] Public attack proof on Sepolia
+- [x] Binance hack (October 2026) replayed on a mainnet fork and on Sepolia
+- [ ] Approved destinations and fixed caps
 - [ ] Sign through the usual Safe app (relay)
 - [ ] Pilots on small Safes with associations
 - [ ] Independent security audit

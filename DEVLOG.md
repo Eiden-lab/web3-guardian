@@ -2,6 +2,12 @@
 
 Newest first. One entry per meaningful step.
 
+## 2026-10-30
+- **Binance hack replayed.** The 29 October theft ($6.3B, hot wallets) researched, then replayed against a Safe with
+  Web3 Guardian, on a mainnet fork with the real amounts and on Sepolia: the full sweep was refused and cancelled,
+  only the first 5% slice left, the Safe kept 95%.
+- Next, from this hack: approved destinations, fixed caps, a Safe-wide freeze.
+
 ## 2026-10-29
 - Node hardened: RPC addresses never appear in error logs.
 - Interactive walkthrough of the Sepolia attack proof.

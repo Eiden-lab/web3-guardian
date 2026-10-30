@@ -80,7 +80,7 @@ svg.stage { display: block; width: 100%; min-width: 640px; height: auto; font-fa
 .result .ok { color: var(--ok); } .result .stop { color: var(--stop); }
 .play { appearance: none; border: 0; cursor: pointer; font: inherit; font-size: 15px; border-radius: 980px; padding: 10px 22px; background: var(--accent); color: #fff; white-space: nowrap; }
 .play:hover { filter: brightness(1.08); }
-.rail { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 28px; }
+.rail { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; margin-top: 28px; }
 .rail button { appearance: none; border: 0; background: transparent; cursor: pointer; font: inherit; text-align: left; color: var(--muted); font-size: 13px; padding: 10px 0 0; border-top: 2px solid var(--hair); }
 .rail button[aria-current="step"] { color: var(--fg); border-top-color: var(--fg); }
 .rail button.done { border-top-color: var(--muted); }
@@ -128,7 +128,7 @@ h3.sec { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; letter-spacing: -
 .col .k { font-size: 13px; color: var(--muted); }
 .col h4 { margin: 0; font-size: 21px; letter-spacing: -0.025em; line-height: 1.2; }
 .col p { margin: 0; color: var(--muted); font-size: 15px; }
-.cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+.cases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
 .case { display: grid; gap: 10px; align-content: start; }
 .case .big { font-size: 56px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
 .case p { margin: 0; color: var(--muted); }
@@ -171,7 +171,7 @@ footer .wrap { display: grid; gap: 6px; }
   <div class="wrap">
     <p class="eyebrow">Public attack proof · Sepolia · October 28, 2026</p>
     <h1>Signed.<br>Still stopped.</h1>
-    <p class="lede">Tricked signers approved five real theft techniques against a protected Safe. Watch each one happen, and see why none of them landed.</p>
+    <p class="lede">Tricked signers approved five real theft techniques against a protected Safe. Watch each one happen, and see why none of them landed. Then the Binance hack of 29 October 2026, replayed.</p>
   </div>
 </header>
 
@@ -232,7 +232,7 @@ footer .wrap { display: grid; gap: 6px; }
 
     <div class="caption">
       <div>
-        <div class="count" id="cap-count">Step 1 of 7</div>
+        <div class="count" id="cap-count">Step 1 of 8</div>
         <h2 id="cap-title">Queue with one signature</h2>
         <p id="cap-text"></p>
         <div class="result" id="cap-result" aria-live="polite"></div>
@@ -261,7 +261,7 @@ footer .wrap { display: grid; gap: 6px; }
 <section id="real">
   <div class="wrap">
     <h3 class="sec">Tested on the real attacks.</h3>
-    <p class="sec-lede">The Bybit and WazirX attack transactions, replayed byte for byte on a copy of Ethereum mainnet against a Safe protected by Guardian.</p>
+    <p class="sec-lede">The Bybit and WazirX attack transactions, replayed byte for byte on a copy of Ethereum mainnet against a Safe protected by Guardian. The Binance hack, replayed with its real amounts on a mainnet copy and on Sepolia. Binance's funds sat in hot wallets, not a Safe: the replay shows what Guardian does if they had.</p>
     <div class="cases">
       <div class="case">
         <span class="big">Bybit</span>
@@ -274,6 +274,12 @@ footer .wrap { display: grid; gap: 6px; }
         <p>July 2024 · about $230 million</p>
         <dl><dt>Without Guardian</dt><dd>Safe code replaced</dd><dt>With Guardian</dt><dd>Critical, waits 48 hours</dd></dl>
         <a href="https://etherscan.io/tx/0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d" target="_blank" rel="noopener">Original attack transaction ›</a>
+      </div>
+      <div class="case">
+        <span class="big">Binance</span>
+        <p>October 2026 · about $6.3 billion</p>
+        <dl><dt>Without Guardian</dt><dd>1.615B USDT gone in 3 min 24 s</dd><dt>With Guardian</dt><dd>Sweep refused and cancelled, 95% kept</dd></dl>
+        <a href="https://sepolia.etherscan.io/tx/0xff3c3a2542e427d1e3ca2d89aa2e1837ba598b91b4819badc6dfa2c513ddb724" target="_blank" rel="noopener">Replay on Sepolia ›</a>
       </div>
     </div>
   </div>
@@ -288,6 +294,8 @@ footer .wrap { display: grid; gap: 6px; }
         <tr><td>Guard</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0xa850c0653F3623D8b7c7032139fBD1577445B981" target="_blank" rel="noopener">0xa850c0653F3623D8b7c7032139fBD1577445B981</a></td></tr>
         <tr><td>Safe · v1.4.1 · 2 of 3</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0x7711475aFc3a4274a9F81CF1489cB227b08E20ca" target="_blank" rel="noopener">0x7711475aFc3a4274a9F81CF1489cB227b08E20ca</a></td></tr>
         <tr><td>Signature firewall</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0x91F40a0627Af2610823E159fFF606442Bd7F6626" target="_blank" rel="noopener">0x91F40a0627Af2610823E159fFF606442Bd7F6626</a></td></tr>
+        <tr><td>Binance replay · guard</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0xD1E0aADa1866E703cbc45ea6f3B4BC33f184Ab38" target="_blank" rel="noopener">0xD1E0aADa1866E703cbc45ea6f3B4BC33f184Ab38</a></td></tr>
+        <tr><td>Binance replay · Safe</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0xe4c0728382FEB35910ecB10D60a8431e31412Df6" target="_blank" rel="noopener">0xe4c0728382FEB35910ecB10D60a8431e31412Df6</a></td></tr>
         <tr><td>Attacker contract</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0xEebc7d05Bc0ab166E66a787d975f0a2B88c94c82" target="_blank" rel="noopener">0xEebc7d05Bc0ab166E66a787d975f0a2B88c94c82</a></td></tr>
       </tbody></table>
     </div>
@@ -347,6 +355,10 @@ footer .wrap { display: grid; gap: 6px; }
       text: "The control: an ordinary payment of 20,000 to a supplier, 2% of the treasury.",
       on: { tone: "ok", head: "Paid", why: "Routine · daily operations are not blocked", tx: "0xc09bb57cd6380647dcda240e22157b782bf09f495fb48073c8d67b0a9f96ab5b", pay: 20000 },
       off: { tone: "", head: "Paid", why: "Ordinary payments work either way", pay: 20000 } },
+    { rail: "Binance", title: "The Binance move · 29 Oct 2026",
+      text: "The signing service itself is hijacked, so the signers sign whatever it sends: a sweep of everything, then the same sweep in slices. On 29 October this took $6.3B from Binance's hot wallets.",
+      on: { tone: "ok", head: "95% kept", why: "Full sweep refused, sentinel delay, owners cancel; only the first 5% slice left. Same result on Sepolia with the real 1.615B", tx: "0xff3c3a2542e427d1e3ca2d89aa2e1837ba598b91b4819badc6dfa2c513ddb724", usd: 49000 },
+      off: { tone: "stop", head: "Everything stolen in minutes", why: "One Binance wallet lost 1.615B USDT in 3 min 24 s", usd: Infinity, eth: Infinity } },
   ];
 
   let guard = true, cur = 0, done = 0, run = 0, playing = false;
@@ -477,7 +489,7 @@ footer .wrap { display: grid; gap: 6px; }
     await Promise.all(runs);
   }
 
-  // ------------------------------------------------------------------ the seven scenes
+  // ------------------------------------------------------------------ the eight scenes
   const SCENES = [
     async (id) => { // one signature
       lightSigners(1);
@@ -615,6 +627,37 @@ footer .wrap { display: grid; gap: 6px; }
       await Promise.all([stream(3, HELP, id), wait(500, id).then(() => flash("ok", id)), counter(before, after, id)]);
       stamp("ok", "Paid");
     },
+    async (id) => { // Binance: hijacked signing service
+      $("helper-l").textContent = "Signing service";
+      $("helper-s").textContent = "hijacked";
+      show("helper", true);
+      const p = await sign(3, "sweep 100%", id);
+      p.remove();
+      const before = ledger(cur), after = ledger(cur + 1);
+      if (guard) {
+        $("clock-t").textContent = "48 h";
+        show("clock", true);
+        await flash("stop", id);
+        show("phone", true);
+        await wait(900, id);
+        lightSigners(0);
+        const c = await sign(2, "cancel", id);
+        c.setAttribute("class", "packet ok");
+        await flash("ok", id);
+        c.remove();
+        show("clock", false);
+        show("phone", false);
+        const s5 = packet("slice 5%", "stop");
+        at(s5, HELP);
+        await move(s5, HELP, edge(HELP), 600, id);
+        s5.remove();
+        await Promise.all([stream(2, ATT, id), counter(before, after, id)]);
+        stamp("ok", "95% kept · sweep cancelled");
+      } else {
+        await Promise.all([stream(8, ATT, id), stream(2, ATT, id, { eth: true }), counter(before, after, id)]);
+        stamp("stop", "Everything stolen · minutes");
+      }
+    },
   ];
 
   // ------------------------------------------------------------------ stage control
@@ -713,7 +756,7 @@ footer .wrap { display: grid; gap: 6px; }
 
   $("play").addEventListener("click", () => {
     if (playing) { playing = false; run++; resetStage(); caption(cur, false); renderRail(); return; }
-    // Continue from the first step not yet played; start over once all seven have run.
+    // Continue from the first step not yet played; start over once all of them have run.
     if (done >= STEPS.length) done = 0;
     playAll(done);
   });

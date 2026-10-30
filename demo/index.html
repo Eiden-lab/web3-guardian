@@ -1,0 +1,741 @@
+<title>Guardian Attack Proof</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: Apple keynote rhythm. Frosted nav, statement hero, then one animated stage (signers, Safe inside the
+   Guardian ring, attacker) with a caption and a step rail under it. Supporting sections use hairlines, not boxes. */
+:root {
+  --bg: #fbfbfd;
+  --stage: #f5f5f7;
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --hair: #d2d2d7;
+  --node: #ffffff;
+  --accent: #0071e3;
+  --ok: #1d8a3a;
+  --stop: #d70015;
+  --coin: #e8a300;
+  --eth: #5e5ce6;
+  --nav: rgba(251, 251, 253, 0.72);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000; --stage: #0f0f11; --fg: #f5f5f7; --muted: #98989d; --hair: #38383a; --node: #1c1c1e;
+    --accent: #2997ff; --ok: #30d158; --stop: #ff453a; --coin: #ffcc00; --eth: #7d7aff; --nav: rgba(0, 0, 0, 0.72);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000; --stage: #0f0f11; --fg: #f5f5f7; --muted: #98989d; --hair: #38383a; --node: #1c1c1e;
+  --accent: #2997ff; --ok: #30d158; --stop: #ff453a; --coin: #ffcc00; --eth: #7d7aff; --nav: rgba(0, 0, 0, 0.72);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 17px; line-height: 1.47;
+  letter-spacing: -0.022em; -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+.wrap {
+  max-width: 1040px; margin: 0 auto;
+  padding-left: max(22px, env(safe-area-inset-left, 0px)); padding-right: max(22px, env(safe-area-inset-right, 0px));
+}
+.mono { font-family: var(--mono); font-size: 0.82em; letter-spacing: 0; }
+.num { font-variant-numeric: tabular-nums; }
+
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--nav); }
+nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--nav);
+  backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--hair);
+}
+nav .wrap { display: flex; align-items: center; gap: 28px; height: 48px; font-size: 12px; }
+.brand { font-weight: 600; font-size: 17px; color: var(--fg); margin-right: auto; }
+nav a.l { color: var(--fg); opacity: 0.8; }
+
+.hero { text-align: center; padding-block: 96px 40px; }
+.eyebrow { font-size: 17px; font-weight: 600; color: var(--muted); margin: 0 0 8px; }
+h1 { font-size: clamp(48px, 9vw, 96px); line-height: 1.02; letter-spacing: -0.05em; font-weight: 700; margin: 0; }
+.lede { font-size: clamp(19px, 2.4vw, 24px); line-height: 1.38; color: var(--muted); max-width: 28em; margin: 20px auto 0; text-wrap: balance; letter-spacing: -0.015em; }
+
+/* Stage */
+.stage-wrap { padding-block: 24px 88px; }
+.toolbar { display: flex; justify-content: center; margin-bottom: 18px; }
+.seg { display: inline-grid; grid-template-columns: 1fr 1fr; background: var(--stage); border-radius: 980px; padding: 3px; }
+.seg button { appearance: none; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 14px; padding: 7px 18px; border-radius: 980px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.stage-scroll { overflow-x: auto; border-radius: 28px; background: var(--stage); }
+svg.stage { display: block; width: 100%; min-width: 640px; height: auto; font-family: var(--font); }
+.caption { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 32px; align-items: end; margin-top: 28px; }
+.caption .count { color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+.caption h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.035em; margin: 2px 0 6px; }
+.caption p { margin: 0; color: var(--muted); max-width: 36em; }
+.result { margin-top: 10px; font-size: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: baseline; min-height: 1.5em; }
+.result b { font-weight: 600; }
+.result .ok { color: var(--ok); } .result .stop { color: var(--stop); }
+.play { appearance: none; border: 0; cursor: pointer; font: inherit; font-size: 15px; border-radius: 980px; padding: 10px 22px; background: var(--accent); color: #fff; white-space: nowrap; }
+.play:hover { filter: brightness(1.08); }
+.rail { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 28px; }
+.rail button { appearance: none; border: 0; background: transparent; cursor: pointer; font: inherit; text-align: left; color: var(--muted); font-size: 13px; padding: 10px 0 0; border-top: 2px solid var(--hair); }
+.rail button[aria-current="step"] { color: var(--fg); border-top-color: var(--fg); }
+.rail button.done { border-top-color: var(--muted); }
+.note { color: var(--muted); font-size: 13px; margin: 18px 0 0; min-height: 1.4em; }
+
+/* SVG parts */
+.n-body { fill: var(--node); stroke: var(--hair); stroke-width: 1.5; }
+.n-text { fill: var(--fg); font-size: 18px; font-weight: 600; }
+.n-sub { fill: var(--muted); font-size: 15px; }
+.n-num { fill: var(--fg); font-size: 26px; font-weight: 700; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+.signer { fill: var(--node); stroke: var(--hair); stroke-width: 1.5; transition: fill 0.3s, stroke 0.3s; }
+.signer.lit { fill: var(--accent); stroke: var(--accent); }
+.signer-l { fill: var(--muted); font-size: 16px; font-weight: 600; transition: fill 0.3s; }
+.signer-l.lit { fill: #fff; }
+.ring { fill: var(--accent); fill-opacity: 0.05; stroke: var(--accent); stroke-width: 3; transition: stroke 0.25s, fill 0.25s, opacity 0.4s; }
+.ring.stop { stroke: var(--stop); fill: var(--stop); fill-opacity: 0.08; }
+.ring.ok { stroke: var(--ok); fill: var(--ok); fill-opacity: 0.08; }
+.ring-l { fill: var(--accent); font-size: 14px; font-weight: 600; letter-spacing: 1.5px; transition: opacity 0.4s; }
+.core { fill: var(--node); stroke: var(--hair); stroke-width: 1.5; transition: fill 0.5s, stroke 0.5s; }
+.core.taken { fill: var(--stop); stroke: var(--stop); }
+.att { fill: var(--stop); fill-opacity: 0.12; stroke: var(--stop); stroke-width: 1.5; }
+.att-l { fill: var(--stop); font-size: 16px; font-weight: 600; }
+.packet rect { fill: var(--fg); }
+.packet text { fill: var(--bg); font-size: 14px; font-weight: 600; }
+.packet.stop rect { fill: var(--stop); } .packet.stop text { fill: #fff; }
+.packet.ok rect { fill: var(--ok); } .packet.ok text { fill: #fff; }
+.coin { fill: var(--coin); }
+.coin.eth { fill: var(--eth); }
+.pill rect { fill: var(--node); stroke: var(--hair); }
+.pill text { fill: var(--fg); font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stamp rect { fill: var(--fg); }
+.stamp text { fill: var(--bg); font-size: 16px; font-weight: 600; }
+.stamp.stop rect { fill: var(--stop); } .stamp.ok rect { fill: var(--ok); }
+.stamp.stop text, .stamp.ok text { fill: #fff; }
+.phone rect { fill: var(--node); stroke: var(--stop); stroke-width: 1.5; }
+.phone text { fill: var(--stop); font-size: 14px; font-weight: 600; }
+.fade { transition: opacity 0.35s; }
+
+/* Supporting sections */
+section { padding-block: 80px; border-top: 1px solid var(--hair); }
+h3.sec { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; letter-spacing: -0.035em; margin: 0 0 12px; text-wrap: balance; }
+.sec-lede { color: var(--muted); font-size: 19px; max-width: 36em; margin: 0 0 44px; }
+.cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
+.col { border-top: 1px solid var(--fg); padding-top: 14px; display: grid; gap: 6px; align-content: start; }
+.col .k { font-size: 13px; color: var(--muted); }
+.col h4 { margin: 0; font-size: 21px; letter-spacing: -0.025em; line-height: 1.2; }
+.col p { margin: 0; color: var(--muted); font-size: 15px; }
+.cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+.case { display: grid; gap: 10px; align-content: start; }
+.case .big { font-size: 56px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.case p { margin: 0; color: var(--muted); }
+.case dl { margin: 6px 0 0; display: grid; grid-template-columns: auto 1fr; }
+.case dt, .case dd { margin: 0; padding: 10px 0; border-top: 1px solid var(--hair); font-size: 15px; }
+.case dt { color: var(--muted); padding-right: 24px; }
+.addr { overflow-x: auto; }
+.addr table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 540px; }
+.addr td { padding: 12px 0; border-top: 1px solid var(--hair); }
+.addr td:first-child { color: var(--muted); width: 34%; padding-right: 16px; }
+footer { padding-block: 32px 56px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--hair); }
+footer .wrap { display: grid; gap: 6px; }
+
+@media (max-width: 760px) {
+  .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cases { grid-template-columns: 1fr; }
+  .rail { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 14px; }
+  .caption { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  nav a.l { display: none; }
+  .hero { padding-block: 64px 28px; }
+  .cols { grid-template-columns: 1fr; }
+  section { padding-block: 56px; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top">Guardian</a>
+    <a class="l" href="#stage">Replay</a>
+    <a class="l" href="#how">How it works</a>
+    <a class="l" href="#real">Real attacks</a>
+    <a class="l" href="#verify">Verify</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow">Public attack proof · Sepolia · October 28, 2026</p>
+    <h1>Signed.<br>Still stopped.</h1>
+    <p class="lede">Tricked signers approved five real theft techniques against a protected Safe. Watch each one happen, and see why none of them landed.</p>
+  </div>
+</header>
+
+<div class="stage-wrap" id="stage">
+  <div class="wrap">
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="Protection">
+        <button type="button" id="mode-on" aria-pressed="true">With Guardian</button>
+        <button type="button" id="mode-off" aria-pressed="false">Without</button>
+      </div>
+    </div>
+
+    <div class="stage-scroll">
+      <svg class="stage" viewBox="0 0 960 460" role="img" aria-labelledby="cap-title">
+        <defs>
+          <marker id="tip" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--hair)"/></marker>
+        </defs>
+        <!-- signers -->
+        <text x="110" y="70" text-anchor="middle" class="n-sub">Signers · 2 of 3</text>
+        <g id="signers"></g>
+        <!-- Safe inside the Guardian ring -->
+        <text id="ring-l" x="470" y="80" text-anchor="middle" class="ring-l">GUARDIAN</text>
+        <circle id="ring" class="ring" cx="470" cy="225" r="128"/>
+        <rect id="core" class="core" x="370" y="160" width="200" height="130" rx="22"/>
+        <text id="core-l" x="470" y="194" text-anchor="middle" class="n-sub">Safe treasury</text>
+        <text id="s-usd" x="470" y="232" text-anchor="middle" class="n-num">1,000,000</text>
+        <text x="470" y="252" text-anchor="middle" class="n-sub">test dollars</text>
+        <text id="s-eth" x="470" y="278" text-anchor="middle" class="n-sub num">0.02 ETH</text>
+        <!-- attacker -->
+        <circle class="att" cx="850" cy="330" r="36"/>
+        <text x="850" y="336" text-anchor="middle" class="att-l">Attacker</text>
+        <text id="a-amt" x="850" y="392" text-anchor="middle" class="n-sub num">has 0</text>
+        <!-- helper node (router, Permit2, unknown contract, supplier) -->
+        <g id="helper" class="fade" opacity="0">
+          <rect class="n-body" x="672" y="84" width="176" height="56" rx="14"/>
+          <text id="helper-l" x="760" y="111" text-anchor="middle" class="n-text">Router</text>
+          <text id="helper-s" x="760" y="130" text-anchor="middle" class="n-sub">approved in 2025</text>
+        </g>
+        <!-- clock -->
+        <g id="clock" class="pill fade" opacity="0">
+          <rect x="560" y="92" width="96" height="32" rx="16"/>
+          <text id="clock-t" x="608" y="113" text-anchor="middle">48 h</text>
+        </g>
+        <!-- phone alert -->
+        <g id="phone" class="phone fade" opacity="0">
+          <rect x="22" y="380" width="206" height="48" rx="12"/>
+          <text x="125" y="400" text-anchor="middle">CRITICAL · Telegram</text>
+          <text x="125" y="418" text-anchor="middle" style="font-weight:400">Send all the ETH?</text>
+        </g>
+        <!-- verdict -->
+        <g id="stamp" class="stamp fade" opacity="0">
+          <rect id="stamp-r" x="300" y="392" width="340" height="40" rx="20"/>
+          <text id="stamp-t" x="470" y="418" text-anchor="middle">Refused</text>
+        </g>
+        <g id="fx"></g>
+      </svg>
+    </div>
+
+    <div class="caption">
+      <div>
+        <div class="count" id="cap-count">Step 1 of 7</div>
+        <h2 id="cap-title">Queue with one signature</h2>
+        <p id="cap-text"></p>
+        <div class="result" id="cap-result" aria-live="polite"></div>
+      </div>
+      <button type="button" class="play" id="play">Play all</button>
+    </div>
+
+    <div class="rail" id="rail" aria-label="Steps"></div>
+    <p class="note" id="note"></p>
+  </div>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <h3 class="sec">Four checks. All on-chain.</h3>
+    <p class="sec-lede">The Safe asks Guardian before and after every transaction. No server sits on that path: if every one went down, the protection would hold.</p>
+    <div class="cols">
+      <div class="col"><span class="k">What it says</span><h4>Risky calls wait longer.</h4><p>Delegatecalls, owner changes, approvals and upgrades wait up to 48 hours. Batches are read call by call.</p></div>
+      <div class="col"><span class="k">How much it moves</span><h4>A daily budget per asset.</h4><p>Up to 5% a day is routine, a further 25% waits a day, anything more waits two. Splitting a drain does not help.</p></div>
+      <div class="col"><span class="k">What it actually does</span><h4>Effects are measured.</h4><p>Balances are checked around execution. A transaction that moves more than it waited for is undone.</p></div>
+      <div class="col"><span class="k">What no guard sees</span><h4>Signatures are firewalled.</h4><p>Off-chain permits count only once the owners approve them through a delayed transaction.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="real">
+  <div class="wrap">
+    <h3 class="sec">Tested on the real attacks.</h3>
+    <p class="sec-lede">The Bybit and WazirX attack transactions, replayed byte for byte on a copy of Ethereum mainnet against a Safe protected by Guardian.</p>
+    <div class="cases">
+      <div class="case">
+        <span class="big">Bybit</span>
+        <p>February 2025 · about $1.5 billion</p>
+        <dl><dt>Without Guardian</dt><dd>Safe code replaced</dd><dt>With Guardian</dt><dd>Waits 48 hours, then refused</dd></dl>
+        <a href="https://etherscan.io/tx/0x46deef0f52e3a983b67abf4714448a41dd7ffd6d32d32da69d62081c68ad7882" target="_blank" rel="noopener">Original attack transaction ›</a>
+      </div>
+      <div class="case">
+        <span class="big">WazirX</span>
+        <p>July 2024 · about $230 million</p>
+        <dl><dt>Without Guardian</dt><dd>Safe code replaced</dd><dt>With Guardian</dt><dd>Critical, waits 48 hours</dd></dl>
+        <a href="https://etherscan.io/tx/0x48164d3adbab78c2cb9876f6e17f88e321097fcd14cadd57556866e4ef3e185d" target="_blank" rel="noopener">Original attack transaction ›</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="verify">
+  <div class="wrap">
+    <h3 class="sec">Check it yourself.</h3>
+    <p class="sec-lede">Open any transaction above, then its Logs tab. The attacker's contract records each attempt and the exact reason it was refused.</p>
+    <div class="addr">
+      <table><tbody>
+        <tr><td>Guard</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0xa850c0653F3623D8b7c7032139fBD1577445B981" target="_blank" rel="noopener">0xa850c0653F3623D8b7c7032139fBD1577445B981</a></td></tr>
+        <tr><td>Safe · v1.4.1 · 2 of 3</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0x7711475aFc3a4274a9F81CF1489cB227b08E20ca" target="_blank" rel="noopener">0x7711475aFc3a4274a9F81CF1489cB227b08E20ca</a></td></tr>
+        <tr><td>Signature firewall</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0x91F40a0627Af2610823E159fFF606442Bd7F6626" target="_blank" rel="noopener">0x91F40a0627Af2610823E159fFF606442Bd7F6626</a></td></tr>
+        <tr><td>Attacker contract</td><td><a class="mono" href="https://sepolia.etherscan.io/address/0xEebc7d05Bc0ab166E66a787d975f0a2B88c94c82" target="_blank" rel="noopener">0xEebc7d05Bc0ab166E66a787d975f0a2B88c94c82</a></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Guardian is a working prototype and is not audited. Do not protect real funds with it yet. On testnet the delays are minutes; in production they are 1 to 48 hours.</span>
+    <span>“Without” outcomes are reproduced in the project's mainnet-fork tests, not on Sepolia. Built by Eiden-lab with Claude Code.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const TX = "https://sepolia.etherscan.io/tx/";
+  const NS = "http://www.w3.org/2000/svg";
+  const $ = (id) => document.getElementById(id);
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Geometry (viewBox units).
+  const SIG = [{ x: 110, y: 130 }, { x: 110, y: 225 }, { x: 110, y: 320 }];
+  const SAFE = { x: 470, y: 225 }, R = 128;
+  const HELP = { x: 760, y: 112 }, ATT = { x: 850, y: 330 };
+  const edge = (from) => {
+    const dx = from.x - SAFE.x, dy = from.y - SAFE.y, d = Math.hypot(dx, dy);
+    return { x: SAFE.x + (dx / d) * R, y: SAFE.y + (dy / d) * R };
+  };
+
+  // Results from the Sepolia run and, for "Without", from the mainnet-fork tests.
+  const STEPS = [
+    { rail: "One signature", title: "Queue with one signature",
+      text: "The attacker has tricked one of the three signers and tries to queue a transfer.",
+      on: { tone: "ok", head: "Refused by the Safe", why: "GS020 · 1 signature, 2 required", tx: "0x0c931ed363673f0893f868f7a6e53caf7288b44d4bbb428ed1a6539de6fd4b8b" },
+      off: { tone: "ok", head: "Refused by the Safe", why: "The Safe itself still needs 2 signatures" } },
+    { rail: "Too early", title: "Execute right away",
+      text: "Two signers approve a transfer. Seconds later, someone tries to execute it.",
+      on: { tone: "ok", head: "Refused", why: "NotReady · its 1-hour wait has not passed", tx: "0xfe7ec819b01be57c6a50a0a2f1fba2464e375379745ace282460a439ee73a60b" },
+      off: { tone: "", head: "Runs at once", why: "No waiting period, no alert" } },
+    { rail: "Takeover", title: "The Bybit move",
+      text: "A delegatecall that replaces the Safe's own code. Nobody cancels it, and it is executed after its delay.",
+      on: { tone: "ok", head: "Refused after the delay", why: "ImplementationChanged · only an approved upgrade may replace the code", tx: "0x1fbdbd2c3a8fe1464c5bfbb6f39b46fd046c31a15c11f5d66548c950db7308eb" },
+      off: { tone: "stop", head: "Safe taken over", why: "The attacker's code replaces the Safe's. Everything inside is theirs", takeover: true } },
+    { rail: "Old approval", title: "Drain through an old approval",
+      text: "A “swap” on a router the treasury approved long ago. Its recipient is the attacker. It looks routine.",
+      on: { tone: "ok", head: "Refused at execution", why: "OutflowExceeded · 500,000 left, 0 declared", tx: "0x6c511c0ed514d38e2ae84070f827448a220080f08168178152759447ea758965" },
+      off: { tone: "stop", head: "500,000 stolen", why: "Nothing checks what the call actually moves", usd: 500000 } },
+    { rail: "Permit2", title: "A signature, no transaction",
+      text: "The signers sign what looks like a login message. It is a Permit2 permit for the whole balance.",
+      on: { tone: "ok", head: "Refused by the firewall", why: "InvalidContractSignature · not approved on-chain", tx: "0x33853e3edd186df30f6192b0baab32301520ab1f5e039384886dc5557345e1b0" },
+      off: { tone: "stop", head: "Balance stolen", why: "The default handler trusts the signers' signatures", usd: Infinity } },
+    { rail: "All the ETH", title: "Send all the ETH",
+      text: "A plain transfer of the whole ETH balance. Guardian holds it for 48 hours and alerts the owners.",
+      on: { tone: "ok", head: "Cancelled by the owners", why: "Flagged critical · cancelled after the alert", tx: "0xa8047d0b7df523c12692931db84c43d82b9a3577830110641c4857243b8f083f" },
+      off: { tone: "stop", head: "0.02 ETH stolen", why: "Executes as soon as it is signed", eth: 0.02 } },
+    { rail: "Invoice", title: "Pay an invoice",
+      text: "The control: an ordinary payment of 20,000 to a supplier, 2% of the treasury.",
+      on: { tone: "ok", head: "Paid", why: "Routine · daily operations are not blocked", tx: "0xc09bb57cd6380647dcda240e22157b782bf09f495fb48073c8d67b0a9f96ab5b", pay: 20000 },
+      off: { tone: "", head: "Paid", why: "Ordinary payments work either way", pay: 20000 } },
+  ];
+
+  let guard = true, cur = 0, done = 0, run = 0, playing = false;
+  const speed = reduce ? 0 : 1;
+
+  // ------------------------------------------------------------------ balances
+  function ledger(n) {
+    let usd = 1000000, eth = 0.02, att = 0, attEth = 0, taken = false;
+    for (let i = 0; i < n; i++) {
+      const r = guard ? STEPS[i].on : STEPS[i].off;
+      if (taken) continue;
+      if (r.pay) usd -= r.pay;
+      if (r.takeover) { att += usd; attEth += eth; usd = 0; eth = 0; taken = true; }
+      if (r.usd) { const t = Math.min(r.usd, usd); usd -= t; att += t; }
+      if (r.eth) { const t = Math.min(r.eth, eth); eth -= t; attEth += t; }
+    }
+    return { usd, eth, att, attEth, taken };
+  }
+  const fmt = (n) => Math.round(n).toLocaleString("en-US");
+  function showLedger(l) {
+    $("s-usd").textContent = fmt(l.usd);
+    $("s-eth").textContent = `${(Math.round(l.eth * 100) / 100).toFixed(2)} ETH`;
+    $("a-amt").textContent = l.att || l.attEth ? `has ${fmt(l.att)}${l.attEth ? ` + ${l.attEth.toFixed(2)} ETH` : ""}` : "has 0";
+    $("core").classList.toggle("taken", l.taken);
+    $("core-l").textContent = l.taken ? "Attacker's code" : "Safe treasury";
+  }
+
+  // ------------------------------------------------------------------ motion primitives
+  class Abort extends Error {}
+  const ease = (p) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+  function tween(ms, id, fn) {
+    if (id !== run) return Promise.reject(new Abort());
+    if (!speed) { fn(1); return Promise.resolve(); }
+    return new Promise((res, rej) => {
+      const t0 = performance.now();
+      const f = (t) => {
+        if (id !== run) return rej(new Abort());
+        const p = Math.min(1, (t - t0) / ms);
+        fn(ease(p));
+        p < 1 ? requestAnimationFrame(f) : res();
+      };
+      requestAnimationFrame(f);
+    });
+  }
+  // Pauses are real time even with reduced motion: only movement is skipped.
+  const wait = (ms, id) => new Promise((res, rej) => setTimeout(() => (id === run ? res() : rej(new Abort())), ms));
+  const mk = (tag, attrs, parent = $("fx")) => {
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    parent.appendChild(e);
+    return e;
+  };
+  const at = (g, p) => g.setAttribute("transform", `translate(${p.x} ${p.y})`);
+  const lerp = (a, b, p) => ({ x: a.x + (b.x - a.x) * p, y: a.y + (b.y - a.y) * p });
+  const move = (g, a, b, ms, id) => tween(ms, id, (p) => at(g, lerp(a, b, p)));
+
+  function packet(label, tone = "") {
+    const g = mk("g", { class: "packet " + tone });
+    const w = label.length * 8 + 30;
+    mk("rect", { x: -w / 2, y: -15, width: w, height: 30, rx: 15 }, g);
+    const t = mk("text", { x: 0, y: 5, "text-anchor": "middle" }, g);
+    t.textContent = label;
+    return g;
+  }
+  function coin(eth = false) {
+    const g = mk("g", {});
+    mk("circle", { r: eth ? 8 : 7, class: eth ? "coin eth" : "coin" }, g);
+    return g;
+  }
+  const show = (id, on) => $(id).setAttribute("opacity", on ? 1 : 0);
+  function stamp(tone, text) {
+    const g = $("stamp"), w = Math.max(200, text.length * 9.2 + 48);
+    g.setAttribute("class", "stamp fade " + tone);
+    $("stamp-r").setAttribute("x", 470 - w / 2);
+    $("stamp-r").setAttribute("width", w);
+    $("stamp-t").textContent = text;
+    show("stamp", true);
+  }
+  async function flash(tone, id) {
+    if (!guard) return;
+    const ring = $("ring");
+    ring.classList.add(tone);
+    await wait(650, id);
+    ring.classList.remove(tone);
+  }
+  function lightSigners(n) {
+    [...$("signers").children].forEach((g, i) => {
+      g.querySelector("circle").classList.toggle("lit", i < n);
+      g.querySelector("text").classList.toggle("lit", i < n);
+    });
+  }
+  async function sign(n, label, id) {
+    for (let i = 0; i < n; i++) { lightSigners(i + 1); await wait(260, id); }
+    const p = packet(label);
+    const from = { x: SIG[1].x + 70, y: SIG[1].y };
+    at(p, from);
+    await move(p, from, edge(from), 750, id);
+    return p;
+  }
+  async function countdown(fromLabel, id) {
+    show("clock", true);
+    const h = parseInt(fromLabel, 10);
+    await tween(1100, id, (p) => { $("clock-t").textContent = `${Math.ceil(h * (1 - p))} h`; });
+    $("clock-t").textContent = "Ready";
+  }
+  async function counter(from, to, id) {
+    await tween(900, id, (p) => showLedger({ ...from, usd: from.usd + (to.usd - from.usd) * p, eth: from.eth + (to.eth - from.eth) * p, att: from.att + (to.att - from.att) * p, attEth: from.attEth + (to.attEth - from.attEth) * p, taken: to.taken }));
+    showLedger(to);
+  }
+  // Coins leave the Safe toward `dest`. With Guardian they stop at the ring and fall back.
+  async function stream(n, dest, id, { eth = false, blocked = false, via = null } = {}) {
+    const exit = edge(via || dest);
+    const runs = [];
+    for (let i = 0; i < n; i++) {
+      const c = coin(eth);
+      const start = { x: SAFE.x + (i % 3 - 1) * 18, y: SAFE.y + 10 };
+      at(c, start);
+      runs.push((async () => {
+        await wait(i * 120, id);
+        await move(c, start, exit, 520, id);
+        if (blocked) { await move(c, exit, start, 420, id); c.remove(); return; }
+        let p = exit;
+        if (via) { await move(c, p, via, 380, id); p = via; }
+        await move(c, p, dest, 520, id);
+        c.remove();
+      })());
+    }
+    await Promise.all(runs);
+  }
+
+  // ------------------------------------------------------------------ the seven scenes
+  const SCENES = [
+    async (id) => { // one signature
+      lightSigners(1);
+      await wait(250, id);
+      const p = packet("1 signature");
+      const from = { x: 180, y: SIG[0].y };
+      at(p, from);
+      await move(p, from, edge(from), 750, id);
+      p.setAttribute("class", "packet stop");
+      await move(p, edge(from), { x: 240, y: 150 }, 420, id);
+      p.remove();
+      stamp("ok", "Refused · 2 signatures required");
+    },
+    async (id) => { // too early
+      const p = await sign(2, "transfer", id);
+      p.remove();
+      $("clock-t").textContent = "1 h";
+      show("clock", true);
+      await wait(400, id);
+      const x = packet("execute now");
+      const from = { x: 180, y: SIG[2].y };
+      at(x, from);
+      await move(x, from, edge(from), 650, id);
+      if (guard) {
+        x.setAttribute("class", "packet stop");
+        await Promise.all([flash("stop", id), move(x, edge(from), { x: 240, y: 360 }, 420, id)]);
+        x.remove();
+        stamp("ok", "Refused · NotReady");
+      } else {
+        await move(x, edge(from), SAFE, 300, id);
+        x.remove();
+        stamp("", "Runs at once · no delay");
+      }
+    },
+    async (id) => { // Bybit
+      $("helper-l").textContent = "Unknown contract";
+      $("helper-s").textContent = "the attacker's";
+      show("helper", true);
+      const p = await sign(2, "delegatecall", id);
+      p.remove();
+      if (guard) { $("clock-t").textContent = "48 h"; await countdown("48", id); }
+      const code = packet("new code", "stop");
+      at(code, HELP);
+      const hit = edge(HELP);
+      await move(code, HELP, hit, 700, id);
+      if (guard) {
+        await Promise.all([flash("stop", id), move(code, hit, HELP, 500, id)]);
+        code.remove();
+        stamp("ok", "Refused · ImplementationChanged");
+      } else {
+        await move(code, hit, SAFE, 350, id);
+        code.remove();
+        const before = ledger(cur), after = ledger(cur + 1);
+        $("core").classList.add("taken");
+        await Promise.all([stream(8, ATT, id), stream(2, ATT, id, { eth: true }), counter(before, after, id)]);
+        stamp("stop", "Safe taken over");
+      }
+    },
+    async (id) => { // old approval
+      $("helper-l").textContent = "Router";
+      $("helper-s").textContent = "approved in 2025";
+      show("helper", true);
+      const p = await sign(2, "swap", id);
+      p.remove();
+      if (guard) { $("clock-t").textContent = "1 h"; await countdown("1", id); }
+      if (guard) {
+        await Promise.all([stream(6, ATT, id, { blocked: true, via: HELP }), wait(700, id).then(() => flash("stop", id))]);
+        stamp("ok", "Refused · OutflowExceeded");
+      } else {
+        const before = ledger(cur), after = ledger(cur + 1);
+        await Promise.all([stream(6, ATT, id, { via: HELP }), counter(before, after, id)]);
+        stamp("stop", "500,000 stolen");
+      }
+    },
+    async (id) => { // Permit2
+      $("helper-l").textContent = "Permit2";
+      $("helper-s").textContent = "token approvals";
+      show("helper", true);
+      for (let i = 0; i < 2; i++) { lightSigners(i + 1); await wait(260, id); }
+      const msg = packet("“Sign in” message");
+      const from = { x: 200, y: 70 };
+      at(msg, from);
+      await move(msg, from, { x: HELP.x - 40, y: 40 }, 900, id);
+      msg.remove();
+      const ask = packet("valid signature?");
+      at(ask, HELP);
+      const hit = edge(HELP);
+      await move(ask, HELP, hit, 650, id);
+      if (guard) {
+        ask.setAttribute("class", "packet stop");
+        await Promise.all([flash("stop", id), move(ask, hit, HELP, 450, id)]);
+        ask.remove();
+        stamp("ok", "Refused · not approved on-chain");
+      } else {
+        ask.setAttribute("class", "packet ok");
+        await move(ask, hit, HELP, 450, id);
+        ask.remove();
+        const before = ledger(cur), after = ledger(cur + 1);
+        await Promise.all([stream(7, ATT, id, { via: HELP }), counter(before, after, id)]);
+        stamp("stop", "Balance stolen · no transaction");
+      }
+    },
+    async (id) => { // all the ETH
+      const p = await sign(2, "send all ETH", id);
+      p.remove();
+      if (guard) {
+        $("clock-t").textContent = "48 h";
+        show("clock", true);
+        await wait(300, id);
+        show("phone", true);
+        await wait(1100, id);
+        lightSigners(0);
+        await wait(200, id);
+        const c = await sign(2, "cancel", id);
+        c.setAttribute("class", "packet ok");
+        await flash("ok", id);
+        c.remove();
+        show("clock", false);
+        show("phone", false);
+        stamp("ok", "Cancelled by the owners");
+      } else {
+        const before = ledger(cur), after = ledger(cur + 1);
+        await Promise.all([stream(2, ATT, id, { eth: true }), counter(before, after, id)]);
+        stamp("stop", "0.02 ETH stolen");
+      }
+    },
+    async (id) => { // invoice
+      $("helper-l").textContent = "Supplier";
+      $("helper-s").textContent = "invoice · 20,000";
+      show("helper", true);
+      const p = await sign(2, "pay invoice", id);
+      p.remove();
+      if (guard) { $("clock-t").textContent = "1 h"; await countdown("1", id); }
+      const before = ledger(cur), after = ledger(cur + 1);
+      await Promise.all([stream(3, HELP, id), wait(500, id).then(() => flash("ok", id)), counter(before, after, id)]);
+      stamp("ok", "Paid");
+    },
+  ];
+
+  // ------------------------------------------------------------------ stage control
+  SIG.forEach((s, i) => {
+    const g = mk("g", {}, $("signers"));
+    mk("circle", { cx: s.x, cy: s.y, r: 28, class: "signer" }, g);
+    const t = mk("text", { x: s.x, y: s.y + 6, "text-anchor": "middle", class: "signer-l" }, g);
+    t.textContent = "ABC"[i];
+  });
+
+  function resetStage() {
+    $("fx").replaceChildren();
+    ["helper", "clock", "phone", "stamp"].forEach((g) => show(g, false));
+    lightSigners(0);
+    $("ring").setAttribute("class", "ring");
+    $("ring").style.opacity = guard ? 1 : 0;
+    $("ring-l").style.opacity = guard ? 1 : 0;
+    showLedger(ledger(cur));
+  }
+
+  function caption(i, final) {
+    const s = STEPS[i], r = guard ? s.on : s.off;
+    $("cap-count").textContent = `Step ${i + 1} of ${STEPS.length}`;
+    $("cap-title").textContent = s.title;
+    $("cap-text").textContent = s.text;
+    const box = $("cap-result");
+    box.replaceChildren();
+    if (!final) return;
+    const taken = !guard && ledger(i).taken;
+    const head = document.createElement("b");
+    head.className = taken ? "stop" : r.tone;
+    head.textContent = taken ? "Nothing left to take" : r.head;
+    const why = document.createElement("span");
+    why.textContent = taken ? "The Safe was taken over in step 3" : r.why;
+    box.append(head, why);
+    if (guard && r.tx) {
+      const a = document.createElement("a");
+      a.href = TX + r.tx; a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "View on Etherscan ›";
+      box.append(a);
+    }
+  }
+
+  function renderRail() {
+    [...$("rail").children].forEach((b, i) => {
+      b.toggleAttribute("aria-current", false);
+      if (i === cur) b.setAttribute("aria-current", "step");
+      b.classList.toggle("done", i < done && i !== cur);
+    });
+    $("play").textContent = playing ? "Pause" : done >= STEPS.length ? "Play again" : "Play all";
+    $("note").textContent = guard
+      ? "Every result links to its real Sepolia transaction."
+      : "Without Guardian: outcomes reproduced in the project's mainnet-fork tests, not on Sepolia.";
+  }
+
+  async function playStep(i) {
+    const id = ++run;
+    cur = i;
+    resetStage();
+    caption(i, false);
+    renderRail();
+    try {
+      if (!guard && ledger(i).taken) { await wait(500, id); stamp("stop", "Nothing left to take"); }
+      else await SCENES[i](id);
+      showLedger(ledger(i + 1));
+      done = Math.max(done, i + 1);
+      caption(i, true);
+      renderRail();
+      return true;
+    } catch (e) {
+      if (e instanceof Abort) return false;
+      throw e;
+    }
+  }
+
+  async function playAll(from) {
+    playing = true;
+    renderRail();
+    for (let i = from; i < STEPS.length; i++) {
+      const ok = await playStep(i);
+      if (!ok || !playing) return;
+      const id = run;
+      try { await wait(1400, id); } catch { return; }
+    }
+    playing = false;
+    renderRail();
+  }
+
+  STEPS.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = s.rail;
+    b.addEventListener("click", () => { playing = false; playStep(i); });
+    $("rail").appendChild(b);
+  });
+
+  $("play").addEventListener("click", () => {
+    if (playing) { playing = false; run++; resetStage(); caption(cur, false); renderRail(); return; }
+    // Continue from the first step not yet played; start over once all seven have run.
+    if (done >= STEPS.length) done = 0;
+    playAll(done);
+  });
+  function setMode(on) {
+    guard = on;
+    $("mode-on").setAttribute("aria-pressed", String(on));
+    $("mode-off").setAttribute("aria-pressed", String(!on));
+    playing = false;
+    done = 0;
+    playStep(0);
+  }
+  $("mode-on").addEventListener("click", () => setMode(true));
+  $("mode-off").addEventListener("click", () => setMode(false));
+
+  // Resting state: the first scene already played, so the still frame tells the story.
+  cur = 0;
+  resetStage();
+  caption(0, false);
+  renderRail();
+  const intro = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) { intro.disconnect(); playStep(0); }
+  }, { threshold: 0.4 });
+  intro.observe($("stage"));
+})();
+</script>
